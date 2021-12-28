@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # custom apps
     'droneApi.apps.drone',
+    'droneApi.apps.medication'
 ]
 
 MIDDLEWARE = [
