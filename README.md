@@ -1,72 +1,157 @@
-## Drones
+## API Spec
+The preferred JSON object to be returned by the API should be structured as follows:
 
-[[_TOC_]]
+### Drone (for registration)
 
----
+```source-json
+{
+    "drone": {
+        "serial_number": "dr1267qwerty",
+        "model": "Lightweight",
+        "weight_limit": 350.0,
+        "battery_capacity": 100.0,
+        "state": "idle",
+        "created_at": "2021-12-29T06:38:51.806461Z"
+    },
+    "message": "Drone registered successfully"
+}
 
-:scroll: **START**
+```
+### Loading drone with medication
+```source-json
+{
+    "Medication": {
+        "name": "medication2",
+        "weight": 100.0,
+        "code": "CRS50",
+        "image": "https://sample-image",
+        "drone": 1
+    },
+    "message": "Successfully loaded drone with medication"
+}
+
+```
+### Check loaded medication for a given drone
+```source-json
+{
+    "Medication": [
+        {
+            "name": "medication2",
+            "weight": 100.0,
+            "code": "CRS50",
+            "image": "https://sample-image",
+            "drone": {
+                "serial_number": "dr1267qwert2y",
+                "model": "Lightweight",
+                "weight_limit": 350.0,
+                "battery_capacity": 100.0,
+                "state": "idle",
+                "created_at": "2021-12-29T06:59:46.800679Z"
+            }
+        },
+        {
+            "name": "medication2",
+            "weight": 100.0,
+            "code": "CRS50",
+            "image": "https://sample-image",
+            "drone": {
+                "serial_number": "dr1267qwert2y",
+                "model": "Lightweight",
+                "weight_limit": 350.0,
+                "battery_capacity": 100.0,
+                "state": "idle",
+                "created_at": "2021-12-29T06:59:46.800679Z"
+            }
+        }
+    ],
+    "message": "Successfully fetched drone loaded medication"
+}
+```
+### Check Available drones 
+```source-json
+{
+    "Drones": [
+        {
+            "serial_number": "dr1267qwert2y",
+            "model": "Lightweight",
+            "weight_limit": 350.0,
+            "battery_capacity": 100.0,
+            "state": "idle",
+            "created_at": "2021-12-29T06:59:46.800679Z"
+        }
+    ],
+    "message": "Succesfully fetched all available drones"
+}
+```
+### Check drones battery level
+```source-json
+{
+    "Battery Capacity": {
+        "battery_capacity": 100.0
+    },
+    "message": "Successfully fetched drone battery level"
+}
+```
+Endpoints:
+----------
+
+### Drone Registration:
+
+`POST /api/drone/register`
+
+Example request body:
+
+```source-json
+{
+    "serial_number": "dr1267qwerty",
+    "model": "Lightweight",
+    "weight_limit": 350,
+    "battery_capacity": 100.0,
+    "state": "idle"
+}
+```
+
+returns a Drone
+
+Required fields: `serial_number`, `weight_limit`, `battery_capacity`
+
+### Load drone with medication:
+
+`POST /api/drone/loading/<serial_number>`
+
+Example request body:
+
+```source-json
+{
+    "name": "medication2",
+    "weight": 100.0,
+    "code": "CRS50",
+    "image": "https://sample-image"  
+}
+```
+
+returns a laoded medication
+
+Required fields: `name`, `weight`, `code`, `image`
+
+### Get loaded medication for a given drone
+
+`GET /api/drone/loads/dr1267qwert2y`
+
+returns all loaded medication for the given drone
 
 
-### Introduction
+### Get available drones
 
-There is a major new technology that is destined to be a disruptive force in the field of transportation: **the drone**. Just as the mobile phone allowed developing countries to leapfrog older technologies for personal communication, the drone has the potential to leapfrog traditional transportation infrastructure.
+`GET /api/drone/available`
 
-Useful drone functions include delivery of small items that are (urgently) needed in locations with difficult access.
+returns all available drone
 
----
+### Get a drone's battery level
 
-### Task description
+`GET /api/drone/battery_level/<serial_number>`
 
-We have a fleet of **10 drones**. A drone is capable of carrying devices, other than cameras, and capable of delivering small loads. For our use case **the load is medications**.
+returns a specific drone's battery level
 
-A **Drone** has:
-- serial number (100 characters max);
-- model (Lightweight, Middleweight, Cruiserweight, Heavyweight);
-- weight limit (500gr max);
-- battery capacity (percentage);
-- state (IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING).
 
-Each **Medication** has: 
-- name (allowed only letters, numbers, ‘-‘, ‘_’);
-- weight;
-- code (allowed only upper case letters, underscore and numbers);
-- image (picture of the medication case).
 
-Develop a service via REST API that allows clients to communicate with the drones (i.e. **dispatch controller**). The specific communicaiton with the drone is outside the scope of this task. 
-
-The service should allow:
-- registering a drone;
-- loading a drone with medication items;
-- checking loaded medication items for a given drone; 
-- checking available drones for loading;
-- check drone battery level for a given drone;
-
-> Feel free to make assumptions for the design approach. 
-
----
-
-### Requirements
-
-While implementing your solution **please take care of the following requirements**: 
-
-#### Functional requirements
-
-- There is no need for UI;
-- Prevent the drone from being loaded with more weight that it can carry;
-- Prevent the drone from being in LOADING state if the battery level is **below 25%**;
-- Introduce a periodic task to check drones battery levels and create history/audit event log for this.
-
----
-
-#### Non-functional requirements
-
-- Input/output data must be in JSON format;
-- Your project must be buildable and runnable;
-- Your project must have a README file with build/run/test instructions (use DB that can be run locally, e.g. in-memory, via container);
-- Required data must be preloaded in the database.
-- JUnit tests are optional but advisable (if you have time);
-- Advice: Show us how you work through your commit history.
-
----
-
-:scroll: **END** 

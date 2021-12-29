@@ -1,9 +1,6 @@
-from django.db import models
-from rest_framework import fields, serializers
+from rest_framework import serializers
 
 from droneApi.apps.medication.models import Medication
-
-from ..medication.serializers import MedicationSerializer
 from .models import Drone
 
 class DroneSerializer(serializers.ModelSerializer):
@@ -17,7 +14,7 @@ class DroneSerializer(serializers.ModelSerializer):
 
 class DroneLoadingSerializer(serializers.ModelSerializer):
     """ Drone Loading Serializer Class """
-    
+ 
     class Meta:
         model = Medication
         fields = ['name', 'weight', 'code', 'image', 'drone']
@@ -28,6 +25,7 @@ class DroneLoadingSerializer(serializers.ModelSerializer):
 class DroneLoadMedicationSerialzer(serializers.ModelSerializer):
     """ Drone Load Serializer Class"""
     drone = DroneSerializer()
+
     class Meta:
         model = Medication
         fields = ['name', 'weight', 'code', 'image', 'drone']

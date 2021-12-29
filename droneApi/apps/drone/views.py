@@ -53,6 +53,7 @@ class DroneLoadingView(APIView):
     """ Drone loading view class """
     serializer_class = DroneLoadingSerializer
     
+    
     def post(self, request, serial_number):
 
         try:
