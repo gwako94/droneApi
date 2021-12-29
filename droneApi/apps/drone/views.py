@@ -61,11 +61,14 @@ class DroneLoadingView(APIView):
             data = request.data
             if drone.battery_capacity < 25.0 or data['weight'] > drone.weight_limit:
                 return Response({'message': 'Cannot load drone, battery level below 25 or drone\'s weight limit excedeed'})
+            weight_limit = drone.weight_limit - data['weight']
             data['drone'] = drone.id
             serializer = self.serializer_class(data=data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             drone.state = 'loaded'
+            drone.weight_limit = weight_limit
+            drone.save()          
             res = {
                 'Medication': serializer.data,
                 'message': 'Successfully loaded drone with medication'
